@@ -9,6 +9,7 @@ import (
 
 type App struct {
 	JwtSecret string
+	SecretSalt string
 	PageSize  int
 	PrefixUrl string
 

@@ -3,6 +3,7 @@ package services
 import (
 	"fmt"
 	"gin-demo/app/models"
+	"gin-demo/utils/jwt"
 )
 
 type User struct {
@@ -101,4 +102,20 @@ func TransferUsers(us []*models.User) (users []*User) {
 		users = append(users, user)
 	}
 	return users
+}
+
+func GenerateToken(code, username string) (string, error) {
+	return jwt.GenerateToken(code,username)
+}
+
+func Auth(username, password string) (string,error){
+	user,err := models.Check(username,password)
+	if err != nil {
+		return "",err
+	}
+	token,err := jwt.GenerateToken(user.Code,user.Username)
+	if err != nil {
+		return "",err
+	}
+	return token,nil
 }

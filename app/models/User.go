@@ -1,7 +1,9 @@
 package models
 
 import (
+	"errors"
 	"gin-demo/utils"
+	"gin-demo/utils/setting"
 	"github.com/jinzhu/gorm"
 )
 
@@ -52,7 +54,8 @@ func FindUserByCode( code string) ( user *User, err error) {
 	return user, err
 }
 
-func GetUserOne( query map[string]interface{},orderBy interface{}) (user *User,err error) {
+func GetUserOne( query map[string]interface{},orderBy interface{}) ( *User,error) {
+	var user User
 	model := db.Model(&User{})
 	for key, value := range query {
 		b,err := utils.In ([]string{"code", "username", "password", "name", "sex", "birthday", "phone", "email", "province", "city", "county", "address", "reference", "regtime", "remark", "is_active", "is_superuser", "flag", "state"},key)
@@ -60,11 +63,11 @@ func GetUserOne( query map[string]interface{},orderBy interface{}) (user *User,e
 			model = model.Where(key + "= ?", value)
 		}
 	}
-	err = model.First(&user).Error
+	err := model.First(&user).Error
 	if err != nil && err != gorm.ErrRecordNotFound{
 		return &User{},nil
 	}
-	return user, nil
+	return &user, nil
 }
 
 func GetUserPages( query map[string]interface{},orderBy interface{},pageNum int,pageSize int) ( []*User, []error) {
@@ -146,4 +149,17 @@ func ClearAllUser() error {
 		return err
 	}
 	return nil
+}
+
+func Check(username, password string) (*User, error) {
+	newpassword := utils.EncodeMD5(setting.AppSetting.SecretSalt+password)
+	user,_:=GetUserOne(map[string]interface{}{"username":username},"code asc")
+
+	if user.Code == "" {
+		return &User{},errors.New("用户不存在或密码错误")
+	}
+	if user.Password != newpassword {
+		return &User{},errors.New("用户密码错误或账户不存在")
+	}
+	return user,nil
 }

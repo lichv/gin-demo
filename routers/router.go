@@ -2,6 +2,7 @@ package routers
 
 import (
 	"gin-demo/app/controllers/user"
+	"gin-demo/app/middlewares"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -18,8 +19,10 @@ func InitRouter() *gin.Engine {
 		})
 	})
 
+	r.Any("/auth/login", user.Login)
+
 	apiv1 := r.Group("/api/v1")
-	apiv1.Use()
+	apiv1.Use(middlewares.JWT())
 	{
 		apiv1.GET("/user/list", user.GetUsers)
 	}
