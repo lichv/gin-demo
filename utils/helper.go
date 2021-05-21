@@ -4,7 +4,10 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"errors"
+	"math/rand"
 	"reflect"
+	"strconv"
+	"time"
 )
 
 func In(haystack interface{}, needle interface{}) (bool, error) {
@@ -30,5 +33,8 @@ func EncodeMD5(value string) string {
 	return hex.EncodeToString(m.Sum(nil))
 }
 
-
+func GeneTimeUUID() string {
+	now := time.Now().UnixNano()/1000
+	return strconv.FormatUint(uint64(now),36)+strconv.Itoa(rand.New(rand.NewSource(now)).Intn(90)+10)
+}
 
