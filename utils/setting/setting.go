@@ -14,6 +14,7 @@ type App struct {
 	PrefixUrl string
 
 	RuntimeRootPath string
+	PublicPath string
 
 	ImageSavePath  string
 	ImageMaxSize   int
