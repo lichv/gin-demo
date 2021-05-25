@@ -13,7 +13,17 @@ func JWT() gin.HandlerFunc {
 		var data interface{}
 
 		code = 200
-		token := c.Query("token")
+		token := c.DefaultQuery("token","")
+		if token == ""{
+			token = c.DefaultPostForm("token","")
+		}
+		if token == ""{
+			token, _ = c.Cookie("token")
+		}
+		if token == "" {
+			token = c.GetHeader("X-TOKEN")
+		}
+
 		if token == "" {
 			code = 400
 		} else {

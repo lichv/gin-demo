@@ -14,7 +14,9 @@ func InitRouter() *gin.Engine {
 	r := gin.New()
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
-	r.Use(favicon.New(path.Join(setting.AppSetting.PublicPath, "favicon.ico")))
+	r.Use(favicon.New(path.Join(setting.AppSetting.RootPath, "favicon.ico")))
+
+	r.Use(middlewares.Cors())
 
 	r.GET("/", func(context *gin.Context) {
 		context.JSON(http.StatusOK, gin.H{
