@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"math/rand"
-	url2 "net/url"
+	"net/url"
 	"reflect"
 	"strconv"
 	"time"
@@ -43,19 +43,14 @@ func GeneTimeUUID() string {
 	return strconv.FormatUint(uint64(now),36)+strconv.Itoa(rand.New(rand.NewSource(now)).Intn(90)+10)
 }
 
-func URLAppendParams(url string, key ,value string) (string,error) {
-	l, err := url2.Parse(url)
+func URLAppendParams(uri string, key ,value string) (string,error) {
+	l, err := url.Parse(uri)
 	if err != nil {
-		return url,err
+		return uri,err
 	}
 
 	query := l.Query()
 	query.Set(key,value)
-	//u, err := url2.Parse(query.Encode())
-	//if err != nil {
-	//	return url,err
-	//}
-	//return fmt.Sprintf("%v",u),nil
 	encodeurl := l.Scheme + "://" + l.Host + "?" + query.Encode()
 	return encodeurl,nil
 }
