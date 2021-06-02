@@ -2,9 +2,9 @@ package models
 
 import (
 	"errors"
-	"gin-demo/utils"
 	"gin-demo/utils/setting"
 	"github.com/jinzhu/gorm"
+	lichv "github.com/lichv/go"
 )
 
 type User struct {
@@ -58,7 +58,7 @@ func GetUserOne( query map[string]interface{},orderBy interface{}) ( *User,error
 	var user User
 	model := db.Model(&User{})
 	for key, value := range query {
-		b,err := utils.In ([]string{"code", "username", "password", "name", "sex", "birthday", "phone", "email", "province", "city", "county", "address", "reference", "regtime", "remark", "is_active", "is_superuser", "flag", "state"},key)
+		b,err := lichv.In ([]string{"code", "username", "password", "name", "sex", "birthday", "phone", "email", "province", "city", "county", "address", "reference", "regtime", "remark", "is_active", "is_superuser", "flag", "state"},key)
 		if  err == nil && b{
 			model = model.Where(key + "= ?", value)
 		}
@@ -75,7 +75,7 @@ func GetUserPages( query map[string]interface{},orderBy interface{},pageNum int,
 	var errs []error
 	model := db.Where("state=?",true)
 	for key, value := range query {
-		b,err := utils.In ([]string{"code", "username", "password", "name", "sex", "birthday", "phone", "email", "province", "city", "county", "address", "reference", "regtime", "remark", "is_active", "is_superuser", "flag", "state"},key)
+		b,err := lichv.In ([]string{"code", "username", "password", "name", "sex", "birthday", "phone", "email", "province", "city", "county", "address", "reference", "regtime", "remark", "is_active", "is_superuser", "flag", "state"},key)
 		if  err == nil && b{
 			model = model.Where(key + "= ?", value)
 		}
@@ -133,7 +133,7 @@ func DeleteUser(code string) error {
 func DeleteUsers(maps map[string]interface{}) error{
 	model := db
 	for key, value := range maps {
-		b,err := utils.In ([]string{"code", "username", "password", "name", "sex", "birthday", "phone", "email", "province", "city", "county", "address", "reference", "regtime", "remark", "is_active", "is_superuser", "flag", "state"},key)
+		b,err := lichv.In ([]string{"code", "username", "password", "name", "sex", "birthday", "phone", "email", "province", "city", "county", "address", "reference", "regtime", "remark", "is_active", "is_superuser", "flag", "state"},key)
 		if  err == nil && b{
 			model = model.Where(key + "= ?", value)
 		}
@@ -152,7 +152,7 @@ func ClearAllUser() error {
 }
 
 func Check(username, password string) (*User, error) {
-	newpassword := utils.EncodeMD5(setting.AppSetting.SecretSalt+password)
+	newpassword := lichv.EncodeMD5(setting.AppSetting.SecretSalt+password)
 	user,_:=GetUserOne(map[string]interface{}{"username":username},"code asc")
 
 	if user.Code == "" {
