@@ -17,6 +17,7 @@ type App struct {
 
 	RuntimeRootPath string
 	PublicPath string
+	StaticPath string
 	RootPath string
 
 	ImageSavePath  string
@@ -40,6 +41,7 @@ type Server struct {
 	HttpPort     int
 	ReadTimeout  time.Duration
 	WriteTimeout time.Duration
+	WhiteList	 string
 }
 
 var ServerSetting = &Server{}

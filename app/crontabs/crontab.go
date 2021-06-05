@@ -8,9 +8,10 @@ import (
 
 func Setup() *cron.Cron {
 	c := cron.New()
-	c.AddFunc("* * * * * *", func() {
+	c.AddFunc("0 0 * * * *", func() {
 		log.Println("Run models.CleanAllTag...")
 	})
 
+	c.Run()
 	return c
 }

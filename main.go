@@ -14,7 +14,7 @@ import (
 func init() {
 	setting.Setup()
 	models.Setup()
-	crontabs.Setup()
+	go crontabs.Setup()
 }
 
 func main() {
@@ -38,4 +38,3 @@ func main() {
 
 	server.ListenAndServe()
 }
-

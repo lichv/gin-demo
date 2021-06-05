@@ -1,12 +1,12 @@
 package routers
 
 import (
+	Home "gin-demo/app/controllers/home"
 	"gin-demo/app/controllers/user"
 	"gin-demo/app/middlewares"
 	"gin-demo/utils/setting"
 	"github.com/gin-gonic/gin"
 	"github.com/thinkerou/favicon"
-	"net/http"
 	"path"
 )
 
@@ -15,17 +15,11 @@ func InitRouter() *gin.Engine {
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 	r.Use(favicon.New(path.Join(setting.AppSetting.RootPath, "favicon.ico")))
-
+	r.LoadHTMLGlob("./public/*.html")
+	r.Static("/static", "./public/static/")
 	r.Use(middlewares.Cors())
 
-	r.GET("/", func(context *gin.Context) {
-		context.JSON(http.StatusOK, gin.H{
-			"state":   2000,
-			"message": "success",
-		})
-	})
-
-	r.Any("/auth/login", user.Login)
+	r.GET("/", Home.Index)
 
 	apiv1 := r.Group("/api/v1")
 	apiv1.Use(middlewares.JWT())
